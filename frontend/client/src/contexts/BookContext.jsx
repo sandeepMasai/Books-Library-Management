@@ -1,3 +1,4 @@
+import React from 'react';
 import { createContext, useEffect, useState } from 'react';
 import api from '../api/axios';
 
@@ -8,20 +9,26 @@ export const BookProvider = ({ children }) => {
   const [myBooks, setMyBooks] = useState([]);
 
   const fetchBooks = async () => {
+  try {
     const { data } = await api.get('/books');
     setBooks(data);
-  };
+  } catch (error) {
+    console.error(error); 
+  }
+};
 
   const fetchMyBooks = async () => {
     const { data } = await api.get('/mybooks');
     setMyBooks(data);
   };
 
-  const addToMyBooks = async (bookId) => {
+const addToMyBooks = async (bookId) => {
+  try {
     await api.post(`/mybooks/${bookId}`);
-    fetchMyBooks();
-  };
-
+  } catch (error) {
+    console.error(error);
+  }
+};
   const updateStatus = async (bookId, status) => {
     await api.patch(`/mybooks/${bookId}/status`, { status });
     fetchMyBooks();

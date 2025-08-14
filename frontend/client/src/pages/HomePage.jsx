@@ -1,26 +1,35 @@
-import { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { BookContext } from '../contexts/BookContext';
-import { AuthContext } from '../contexts/AuthContext';
+import BookCard from '../components/BookCard';
 
-const HomePage = () => {
-  const { books, addToMyBooks } = useContext(BookContext);
-  const { user } = useContext(AuthContext);
+const Home = () => {
+  const { books } = useContext(BookContext);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    
+    if (books) {
+      setLoading(false);
+    }
+  }, [books]);
 
   return (
-    <div>
-      <h1>All Books</h1>
-      {books.map(book => (
-        <div key={book._id}>
-          <img src={book.coverImage} alt={book.title} />
-          <h3>{book.title}</h3>
-          <p>{book.author}</p>
-          <button onClick={() => user ? addToMyBooks(book._id) : alert('Login required')}>
-            Want to Read
-          </button>
+    <div className="p-6 max-w-7xl mx-auto">
+      <h1 className="text-3xl font-bold text-gray-900 mb-6">Available Books</h1>
+
+      {loading ? (
+        <p className="text-center text-gray-600">Loading books...</p>
+      ) : books.length === 0 ? (
+        <p className="text-center text-gray-600">No books found.</p>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+          {books.map((book) => (
+            <BookCard key={book._id} book={book} />
+          ))}
         </div>
-      ))}
+      )}
     </div>
   );
 };
 
-export default HomePage;
+export default Home;

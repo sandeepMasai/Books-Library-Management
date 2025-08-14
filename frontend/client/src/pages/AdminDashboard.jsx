@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { AdminContext } from '../contexts/AdminContext';
 import AddBookForm from '../components/AddBookForm';
 import EditBookForm from '../components/EditBookForm';
@@ -6,9 +6,11 @@ import EditBookForm from '../components/EditBookForm';
 const AdminDashboard = () => {
   const { books, createBook, updateBook, deleteBook } = useContext(AdminContext);
   const [editBook, setEditBook] = useState(null);
+  const [showAddForm, setShowAddForm] = useState(false);
 
   const handleAdd = (bookData) => {
     createBook(bookData);
+    setShowAddForm(false); 
   };
 
   const handleEdit = (bookData) => {
@@ -24,31 +26,57 @@ const AdminDashboard = () => {
   };
 
   return (
-    <div className="p-4 max-w-3xl mx-auto">
-      <h1 className="text-2xl font-bold mb-4">Admin Dashboard</h1>
+    <div className="p-6 max-w-4xl mx-auto">
+      <h1 className="text-3xl font-bold text-gray-800 mb-6">Admin Dashboard</h1>
 
-      {editBook ? (
-        <EditBookForm onSubmit={handleEdit} initialData={editBook} />
-      ) : (
-        <AddBookForm onSubmit={handleAdd} />
+      {/* Add Book Button */}
+      {!showAddForm && !editBook && (
+        <button
+          onClick={() => setShowAddForm(true)}
+          className="mb-6 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded transition"
+        >
+          + Add New Book
+        </button>
       )}
 
-      <ul className="mt-6 space-y-2">
+      {/* Show Add or Edit form */}
+      <div className="mb-8">
+        {showAddForm && (
+          <AddBookForm onSubmit={handleAdd} />
+        )}
+
+        {editBook && (
+          <EditBookForm onSubmit={handleEdit} initialData={editBook} />
+        )}
+      </div>
+
+      <h2 className="text-xl font-semibold text-gray-700 mb-4">Books List</h2>
+
+      <ul className="space-y-4">
         {books.map((book) => (
-          <li key={book._id} className="flex justify-between items-center p-2 border rounded">
-            <div>
-              <strong>{book.title}</strong> by {book.author}
+          <li
+            key={book._id}
+            className="flex flex-col sm:flex-row justify-between items-start sm:items-center p-4 border rounded shadow-sm bg-white hover:shadow-md transition"
+          >
+            <div className="text-gray-800">
+              <strong className="block sm:inline">{book.title}</strong>
+              <span className="text-sm text-gray-600 block sm:inline sm:ml-2">
+                by {book.author}
+              </span>
             </div>
-            <div className="space-x-2">
+            <div className="mt-2 sm:mt-0 space-x-2">
               <button
-                onClick={() => setEditBook(book)}
-                className="bg-blue-500 text-white px-2 py-1 rounded"
+                onClick={() => {
+                  setEditBook(book);
+                  setShowAddForm(false); 
+                }}
+                className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded transition"
               >
                 Edit
               </button>
               <button
                 onClick={() => handleDelete(book._id, book.title)}
-                className="bg-red-500 text-white px-2 py-1 rounded"
+                className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded transition"
               >
                 Delete
               </button>

@@ -1,5 +1,5 @@
 import { Routes, Route } from 'react-router-dom';
-
+import React from 'react';
 
 import Navbar from './components/Navbar';
 import HomePage from './pages/HomePage';
@@ -9,6 +9,7 @@ import RegisterPage from './pages/RegisterPage';
 import AdminDashboard from './pages/AdminDashboard';
 import ProtectedRoute from './routes/ProtectedRoute';
 import MyBooks from './pages/MyBooksPage';
+import ProfilePage from './pages/ProfilePage';
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
 
              <Route element={<ProtectedRoute />}>
               <Route path="/mybooks" element={<MyBooks />} />
+               <Route path="/profile" element={<ProfilePage />} />
               <Route path="/admin" element={<AdminDashboard />} />
             </Route>
 

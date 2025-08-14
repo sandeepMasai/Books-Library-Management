@@ -1,10 +1,10 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 
 const AddBookForm = ({ onSubmit }) => {
   const [title, setTitle] = useState('');
   const [author, setAuthor] = useState('');
   const [coverImage, setCoverImage] = useState('');
-  const [availability, setAvailability] = useState(true); 
+  const [availability, setAvailability] = useState(true);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -14,10 +14,8 @@ const AddBookForm = ({ onSubmit }) => {
       return;
     }
 
-    // Send data with availability
     onSubmit({ title, author, coverImage, availability });
 
-    // Clear form
     setTitle('');
     setAuthor('');
     setCoverImage('');
@@ -25,50 +23,65 @@ const AddBookForm = ({ onSubmit }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <h2 className="text-xl font-semibold">Add New Book</h2>
+    <form
+      onSubmit={handleSubmit}
+      className="max-w-md mx-auto bg-white p-6 rounded shadow space-y-6"
+    >
+      <h2 className="text-2xl font-bold text-gray-800">Add New Book</h2>
 
       <div>
-        <label className="block">Title</label>
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          Title
+        </label>
         <input
           type="text"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          className="w-full p-2 border rounded"
+          className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-400"
         />
       </div>
 
       <div>
-        <label className="block">Author</label>
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          Author
+        </label>
         <input
           type="text"
           value={author}
           onChange={(e) => setAuthor(e.target.value)}
-          className="w-full p-2 border rounded"
+          className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-400"
         />
       </div>
 
       <div>
-        <label className="block">Cover Image URL</label>
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          Cover Image URL
+        </label>
         <input
           type="text"
           value={coverImage}
           onChange={(e) => setCoverImage(e.target.value)}
-          className="w-full p-2 border rounded"
+          className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-400"
         />
       </div>
 
-      <div className="flex items-center gap-2">
+      <div className="flex items-center space-x-2">
         <input
           type="checkbox"
           checked={availability}
           onChange={(e) => setAvailability(e.target.checked)}
           id="availability"
+          className="accent-green-600 w-4 h-4"
         />
-        <label htmlFor="availability">Available</label>
+        <label htmlFor="availability" className="text-sm text-gray-700">
+          Available
+        </label>
       </div>
 
-      <button type="submit" className="bg-green-600 text-white px-4 py-2 rounded">
+      <button
+        type="submit"
+        className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 rounded transition"
+      >
         Add Book
       </button>
     </form>
