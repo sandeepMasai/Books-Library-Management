@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'http://localhost:2025/api',
+  baseURL: 'https://books-library-management-yga0.onrender.com/api',
   withCredentials: true, 
 });
 
