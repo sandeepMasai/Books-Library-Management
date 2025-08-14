@@ -55,7 +55,7 @@ A full-stack digital library web application where users can browse, track, and 
 
 ### 📦 Book Schema
 
-```js
+
 {
   title: String,
   author: String,
@@ -64,9 +64,7 @@ A full-stack digital library web application where users can browse, track, and 
   pdfUrl: String (optional)
 }
 ✅ User Book Status Schema
-js
-Copy
-Edit
+
 {
   userId: ObjectId,
   bookId: ObjectId,
@@ -82,8 +80,7 @@ Navbar dynamically updates based on user session
 
 📁 Folder Structure
 perl
-Copy
-Edit
+
 my-digital-library/
 │
 ├── client/               # React frontend
@@ -101,14 +98,12 @@ my-digital-library/
 🛠 Setup Instructions
 1. Clone the Repo
 bash
-Copy
-Edit
+
 git clone https://github.com/yourusername/my-digital-library.git
 cd my-digital-library
 2. Backend Setup
 bash
-Copy
-Edit
+
 cd server
 npm install
 npm run dev
@@ -116,8 +111,7 @@ The backend server will start on http://localhost:2025
 
 3. Frontend Setup
 bash
-Copy
-Edit
+
 cd client
 npm install
 npm run dev
