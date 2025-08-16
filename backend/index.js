@@ -20,7 +20,7 @@ const app = express();
 connectDb();
 app.use(
   cors({
-    origin: "https://books-library-management-yga0.onrender.com",
+    origin: "http://localhost:5173",
     credentials: true,
   })
 );
