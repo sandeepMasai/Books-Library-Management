@@ -1,117 +1,92 @@
+const jwt = require('jsonwebtoken');
 const User = require('../models/User');
-const bcrypt = require('bcryptjs');
-const { generateToken } = require('../utils/generateToken');
 
-// Helper to send token as cookie
-const sendToken = (user, res, message = '') => {
-  const token = generateToken(user._id);
 
-  const cookieOptions = {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'strict',
-    maxAge: 24 * 60 * 60 * 1000, // 1 day
-  };
-
-  res
-    .status(200)
-    .cookie('token', token, cookieOptions)
-    .json({
-      _id: user._id,
-      username: user.username,
-      email: user.email,
-      role: user.role,
-      message,
-    });
+// Generate JWT token
+const generateToken = (userId) => {
+  return jwt.sign({ userId }, process.env.JWT_SECRET, { expiresIn: '7d' });
 };
 
-// POST /api/auth/register
-exports.registerUser = async (req, res, next) => {
-  const { username, email, password, role } = req.body;
+//Register new user
 
-  if (!username || !email || !password) {
-    return res
-      .status(400)
-      .json({ message: 'Please provide username, email and password' });
-  }
-
+exports.register = async (req, res) => {
   try {
-    let user = await User.findOne({ email });
-    if (user)
-      return res
-        .status(400)
-        .json({ message: 'User already exists with this email' });
+    const { name, email, password, role } = req.body;
 
-    user = await User.findOne({ username });
-    if (user)
-      return res
-        .status(400)
-        .json({ message: 'User already exists with this username' });
+    if (!name || !email || !password) {
+      return res.status(400).json({ error: 'Please provide name, email, and password' });
+    }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    if (password.length < 6) {
+      return res.status(400).json({ error: 'Password must be at least 6 characters' });
+    }
 
-    user = new User({
-      username,
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ error: 'User already exists with this email' });
+    }
+
+    const user = new User({
+      name,
       email,
-      password: hashedPassword,
-      role: role || 'user',
+      password,
+      role: role || 'student'
     });
 
     await user.save();
 
-    sendToken(user, res, 'Registration successful');
+    res.status(201).json({ message: 'User registered successfully' });
+
   } catch (error) {
-    next(error);
+    console.error(error);
+    res.status(500).json({ error: 'Server error during registration' });
   }
 };
 
-// POST /api/auth/login
-exports.loginUser = async (req, res, next) => {
-  const { email, password } = req.body;
+// Login user
 
-  if (!email || !password) {
-    return res
-      .status(400)
-      .json({ message: 'Please provide email and password' });
-  }
-
+exports.login = async (req, res) => {
   try {
-    // Include password explicitly
-    const user = await User.findOne({ email }).select('+password');
-    if (!user) return res.status(400).json({ message: 'Invalid credentials' });
+    const { email, password } = req.body;
 
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch)
-      return res.status(400).json({ message: 'Invalid credentials' });
-
-    sendToken(user, res, 'Login successful');
-  } catch (error) {
-    next(error);
-  }
-};
-
-// GET /api/auth/logout
-exports.logoutUser = (req, res) => {
-  res.cookie('token', '', {
-    httpOnly: true,
-    expires: new Date(0),
-    sameSite: 'strict',
-    secure: process.env.NODE_ENV === 'production',
-  });
-
-  res.status(200).json({ message: 'Logged out successfully' });
-};
-
-// GET /api/auth/me
-exports.getMe = async (req, res, next) => {
-  try {
-    const user = await User.findById(req.user.id).select('-password');
-    if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+    if (!email || !password) {
+      return res.status(400).json({ error: 'Please provide email and password' });
     }
 
-    res.status(200).json(user);
+    const user = await User.findOne({ email });
+    if (!user || !(await user.comparePassword(password))) {
+      return res.status(400).json({ error: 'Invalid credentials' });
+    }
+
+    const token = generateToken(user._id);
+
+    res.json({
+      token,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+       
+      }
+    });
   } catch (error) {
-    next(error);
+    console.error(error);
+    res.status(500).json({ error: 'Server error during login' });
   }
 };
+
+//  Get current logged-in user
+
+exports.getMe = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id)
+      .select('-password')
+
+    res.json(user);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Server error' });
+  }
+};
+

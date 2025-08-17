@@ -1,6 +1,5 @@
 const express = require("express");
 const dotenv = require("dotenv");
-const cookieParser = require("cookie-parser");
 
 // Import DB connection
 const connectDb = require("./config/db");
@@ -16,19 +15,20 @@ dotenv.config();
 
 const app = express();
 
-//  Connect to MongoDB
+// Connect to MongoDB
 connectDb();
+
+// CORS (allow frontend access)
 app.use(
   cors({
     origin: "http://localhost:5173",
-    credentials: true,
+    credentials: false, 
   })
 );
 
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser());
 
 // Routes
 app.use("/api/auth", authRoutes);
@@ -37,11 +37,11 @@ app.use("/api/books", bookRoutes);
 
 // Test route
 app.get("/", (req, res) => {
-  res.send(" API is running...");
+  res.send("API is running...");
 });
 
 // Start server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(` Server listening on port ${PORT}`);
+  console.log(`Server listening on port ${PORT}`);
 });

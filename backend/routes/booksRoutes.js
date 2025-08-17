@@ -1,5 +1,3 @@
-
-
 const express = require('express');
 const {
   getAllBooks,
@@ -10,13 +8,13 @@ const {
 
 const { protect } = require('../middleware/authMiddleware');
 const { authorizeRoles } = require('../middleware/roleMiddleware');
+
 const router = express.Router();
 
-// Public for all roles
+// Public
 router.get('/', getAllBooks);
 
-// Admin-only actions
-router.post('/api/books', protect, authorizeRoles('admin'), createBook);
+// Admin only
 router.post('/', protect, authorizeRoles('admin'), createBook);
 router.put('/:id', protect, authorizeRoles('admin'), updateBook);
 router.delete('/:id', protect, authorizeRoles('admin'), deleteBook);

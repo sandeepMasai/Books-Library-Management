@@ -1,8 +1,13 @@
-exports.authorizeRoles = (...allowedRoles) => {
+// Role-based access control middleware
+const authorizeRoles = (...roles) => {
   return (req, res, next) => {
-    if (!req.user || !allowedRoles.includes(req.user.role)) {
-      return res.status(403).json({ message: 'Access denied: insufficient permissions' });
+    if (!roles.includes(req.user.role)) {
+      return res.status(403).json({
+        message: 'Access denied. Insufficient permissions.'
+      });
     }
     next();
   };
 };
+
+module.exports = { authorizeRoles };
