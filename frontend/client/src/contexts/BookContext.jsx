@@ -19,7 +19,19 @@ export const BookProvider = ({ children }) => {
       setBooks(data || []);
     } catch (error) {
       console.error('Error fetching books:', error);
-      setError(error.response?.data?.message || 'Failed to fetch books');
+
+      // Provide more specific error messages
+      if (error.code === 'ECONNABORTED' || error.message === 'Network Error') {
+        setError('Network error: Unable to connect to server. Please check if the backend is running.');
+      } else if (error.response) {
+        // Server responded with error status
+        setError(error.response.data?.message || `Server error: ${error.response.status}`);
+      } else if (error.request) {
+        // Request made but no response received
+        setError('No response from server. Please check your connection and ensure the backend is running.');
+      } else {
+        setError('Failed to fetch books. Please try again.');
+      }
       setBooks([]);
     } finally {
       setLoading(false);

@@ -50,6 +50,11 @@ Before you begin, ensure you have the following installed:
 - **npm** or **yarn**
 - **MongoDB** (local or MongoDB Atlas account)
 
+## 🌐 Live Demo
+
+- **Backend API**: [https://books-library-management-yga0.onrender.com](https://books-library-management-yga0.onrender.com)
+- **API Health Check**: [https://books-library-management-yga0.onrender.com](https://books-library-management-yga0.onrender.com)
+
 ## 🚀 Installation
 
 ### 1. Clone the repository
@@ -82,6 +87,16 @@ cd ../frontend/client
 npm install
 ```
 
+Create a `.env` file in the `frontend/client` directory:
+
+```env
+# For local development
+VITE_API_URL=http://localhost:3000/api
+
+# For production (if deploying)
+# VITE_API_URL=https://books-library-management-yga0.onrender.com/api
+```
+
 ## ⚙️ Configuration
 
 ### Backend Environment Variables
@@ -100,7 +115,18 @@ NODE_ENV=development
 
 ### Frontend Configuration
 
-The frontend is configured to connect to `http://localhost:3000/api` by default. If your backend runs on a different port, update `frontend/client/src/api/axios.js`.
+The frontend is configured to connect to the backend API. Create `frontend/client/.env` for local development:
+
+```env
+VITE_API_URL=http://localhost:3000/api
+```
+
+For production, set:
+```env
+VITE_API_URL=https://books-library-management-yga0.onrender.com/api
+```
+
+**Note**: The frontend will default to `http://localhost:3000/api` if `VITE_API_URL` is not set.
 
 ## 🏃 Running the Application
 
@@ -203,6 +229,9 @@ Books-Library-Management/
 
 ## 🔌 API Endpoints
 
+**Base URL**: `https://books-library-management-yga0.onrender.com/api` (Production)  
+**Local URL**: `http://localhost:3000/api` (Development)
+
 ### Authentication
 - `POST /api/auth/register` - Register a new user
 - `POST /api/auth/login` - Login user
@@ -278,6 +307,51 @@ Books-Library-Management/
 **Build Errors**
 - Delete `node_modules` and reinstall: `rm -rf node_modules && npm install`
 - Clear Vite cache: `rm -rf node_modules/.vite`
+
+## 🚀 Deployment
+
+### Production Backend URL
+
+The backend is deployed on Render:
+- **Production API**: [https://books-library-management-yga0.onrender.com](https://books-library-management-yga0.onrender.com)
+- **API Base URL**: `https://books-library-management-yga0.onrender.com/api`
+
+### Connecting Frontend to Production Backend
+
+To connect your frontend to the production backend:
+
+1. Create `frontend/client/.env`:
+```env
+VITE_API_URL=https://books-library-management-yga0.onrender.com/api
+```
+
+2. Rebuild the frontend:
+```bash
+cd frontend/client
+npm run build
+```
+
+3. The frontend will now use the production API.
+
+### Deploying to Production
+
+#### Backend (Render)
+1. Connect your GitHub repository to Render
+2. Set environment variables in Render dashboard:
+   - `MONGO_URI` - Your MongoDB connection string
+   - `JWT_SECRET` - Your JWT secret key
+   - `NODE_ENV` - Set to `production`
+   - `PORT` - Render automatically sets this
+3. **Update CORS**: If deploying frontend separately, update `backend/index.js` to add your frontend URL to `allowedOrigins` array
+4. Deploy!
+
+#### Frontend (Vercel/Netlify)
+1. Connect your GitHub repository
+2. Set build command: `npm run build`
+3. Set output directory: `dist`
+4. Add environment variable:
+   - `VITE_API_URL` - `https://books-library-management-yga0.onrender.com/api`
+5. Deploy!
 
 ## 📝 Scripts
 
