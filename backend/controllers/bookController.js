@@ -12,7 +12,7 @@ exports.getAllBooks = async (req, res, next) => {
 
 // POST /api/books - Add a new book
 exports.createBook = async (req, res, next) => {
-  const { title, author, coverImage, availability } = req.body;
+  const { title, author, coverImage, pdfFile, availability } = req.body;
 
   if (!title || !author || !coverImage) {
     return res.status(400).json({ message: 'All fields are required' });
@@ -23,6 +23,7 @@ exports.createBook = async (req, res, next) => {
       title,
       author,
       coverImage,
+      pdfFile: pdfFile || '',
       availability: availability ?? true
     });
 
@@ -42,6 +43,9 @@ exports.updateBook = async (req, res, next) => {
     book.title = req.body.title || book.title;
     book.author = req.body.author || book.author;
     book.coverImage = req.body.coverImage || book.coverImage;
+    if (req.body.pdfFile !== undefined) {
+      book.pdfFile = req.body.pdfFile || '';
+    }
     book.availability = req.body.availability ?? book.availability;
 
     const updatedBook = await book.save();

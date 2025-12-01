@@ -9,15 +9,12 @@ import {BrowserRouter} from 'react-router-dom'
 
 createRoot(document.getElementById('root')).render(
  <AuthProvider>
-  <AdminProvider>
    <BookProvider>
-    <BrowserRouter>
-    <App />
-    </BrowserRouter>
-
+    <AdminProvider>
+     <BrowserRouter>
+       <App />
+     </BrowserRouter>
+    </AdminProvider>
    </BookProvider>
-   </AdminProvider>
  </AuthProvider>
-     
-        
 )

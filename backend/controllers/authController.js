@@ -49,15 +49,32 @@ exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
+    // Validate input
     if (!email || !password) {
       return res.status(400).json({ error: 'Please provide email and password' });
     }
 
-    const user = await User.findOne({ email });
-    if (!user || !(await user.comparePassword(password))) {
+    // Trim and lowercase email to match database format
+    const normalizedEmail = email.trim().toLowerCase();
+
+    if (!normalizedEmail || !password.trim()) {
+      return res.status(400).json({ error: 'Please provide valid email and password' });
+    }
+
+    // Find user by email (email is stored in lowercase in DB)
+    const user = await User.findOne({ email: normalizedEmail });
+    
+    if (!user) {
       return res.status(400).json({ error: 'Invalid credentials' });
     }
 
+    // Compare password
+    const isPasswordValid = await user.comparePassword(password);
+    if (!isPasswordValid) {
+      return res.status(400).json({ error: 'Invalid credentials' });
+    }
+
+    // Generate token
     const token = generateToken(user._id);
 
     res.json({
@@ -67,11 +84,10 @@ exports.login = async (req, res) => {
         name: user.name,
         email: user.email,
         role: user.role,
-       
       }
     });
   } catch (error) {
-    console.error(error);
+    console.error('Login error:', error);
     res.status(500).json({ error: 'Server error during login' });
   }
 };

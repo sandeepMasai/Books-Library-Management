@@ -6,8 +6,18 @@ import { AuthContext } from '../contexts/AuthContext';
 const ProtectedRoute = () => {
   const { user, loading } = useContext(AuthContext);
 
-  if (loading) return <p>Loading...</p>;
-  if (!user) return <Navigate to="/login" r />;
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
+  
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+  
   return <Outlet />;
 };
 

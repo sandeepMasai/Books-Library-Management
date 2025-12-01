@@ -14,9 +14,9 @@ const router = express.Router();
 router.use(protect);
 
 // Routes
-router.get('/', getMyBooks); 
+router.get('/', getMyBooks);
 router.post('/:bookId', addBookToList);
 router.patch('/:bookId/status', updateBookStatus);
-router.patch('/:bookId/rating', authorizeRoles('user', 'admin'), updateBookRating);
+router.patch('/:bookId/rating', authorizeRoles('student', 'admin'), updateBookRating);
 
 module.exports = router;

@@ -15,6 +15,10 @@ const bookSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  pdfFile: {
+    type: String,
+    default: ''
+  },
   availability: {
     type: Boolean,
     default: true

@@ -1,131 +1,322 @@
-# 📚 My Digital Library
+# 📚 Books Library Management System
 
-A full-stack digital library web application where users can browse, track, and rate books — and read PDFs online. Admins can efficiently manage the book catalog through a dashboard.
+A full-stack web application for managing a digital library where users can browse books, add them to their personal reading list, track reading progress, and read PDFs. Admins can manage the book collection.
 
----
+## ✨ Features
 
-## 🛠 Tech Stack
+### For All Users
+- 🔍 **Search & Filter**: Search books by title or author, filter by availability
+- 📖 **Browse Books**: View all available books with beautiful card-based UI
+- 📄 **Read PDFs**: Access PDF versions of books (login required)
+- 📱 **Responsive Design**: Works seamlessly on desktop, tablet, and mobile devices
+- 🎨 **Modern UI**: Built with Tailwind CSS for a clean, modern interface
 
-### 🌐 Frontend
-- **React.js** (Hooks, Context API)
-- **Tailwind CSS** (for UI styling)
-- **React Router DOM** (for routing)
-- **Axios** (for API requests)
+### For Registered Users
+- 📚 **My Books**: Personal reading list management
+- 📊 **Reading Status**: Track books as "Want to Read", "Currently Reading", or "Read"
+- ⭐ **Rating System**: Rate books from 1 to 5 stars
+- 👤 **User Profile**: View and manage profile information
 
-### 🔗 Backend
-- **Node.js**
-- **Express.js**
+### For Admins
+- ➕ **Add Books**: Add new books to the library with cover images and PDFs
+- ✏️ **Edit Books**: Update book information
+- 🗑️ **Delete Books**: Remove books from the library
+- 📄 **Pagination**: Manage large book collections with pagination (10 books per page)
+- 📊 **Dashboard**: Comprehensive admin dashboard for book management
 
-### 🗃 Database
-- **MongoDB** with **Mongoose** (Schema modeling)
+## 🛠️ Tech Stack
 
-### 🔐 Authentication
-- **JWT (JSON Web Tokens)**
-- **bcryptjs** (for password hashing)
+### Backend
+- **Node.js** - Runtime environment
+- **Express.js** - Web framework
+- **MongoDB** - Database
+- **Mongoose** - ODM for MongoDB
+- **JWT** - Authentication
+- **bcryptjs** - Password hashing
+- **CORS** - Cross-origin resource sharing
 
----
+### Frontend
+- **React** - UI library
+- **Vite** - Build tool
+- **React Router** - Routing
+- **Axios** - HTTP client
+- **Tailwind CSS** - Styling
+- **Context API** - State management
 
-## 🚀 Features
+## 📋 Prerequisites
 
-### 👤 User Features
-- 🔐 Register / Login
-- 📖 Browse all available books
-- 📌 "Want to Read" button to save books to **My Books**
-- 🔄 Update reading status:
-  - Want to Read
-  - Currently Reading
-  - Read
-- ⭐ Rate books (1 to 5 stars)
-- 📄 Preview PDF books in-browser (no downloads)
-- 👤 View profile info (name, email)
+Before you begin, ensure you have the following installed:
+- **Node.js** (v14 or higher)
+- **npm** or **yarn**
+- **MongoDB** (local or MongoDB Atlas account)
 
-### 🛠 Admin Features
-- ➕ Add new books with:
-  - Title
-  - Author
-  - Cover Image URL
-  - Availability status
-  - *(Future: Upload PDF)*
-- ✏️ Edit and ❌ Delete books
-- 🧾 Admin Dashboard to manage the book collection
+## 🚀 Installation
 
----
+### 1. Clone the repository
 
-## 🧠 Project Logic
+```bash
+git clone <repository-url>
+cd Books-Library-Management
+```
 
-### 📦 Book Schema
+### 2. Backend Setup
 
-
-{
-  title: String,
-  author: String,
-  coverImage: String,
-  isAvailable: Boolean,
-  pdfUrl: String (optional)
-}
-✅ User Book Status Schema
-
-{
-  userId: ObjectId,
-  bookId: ObjectId,
-  status: 'Want to Read' | 'Currently Reading' | 'Read',
-  rating: 1 to 5
-}
-🔐 Auth Flow
-JWT token stored in localStorage
-
-Auth-protected routes based on user role (user or admin)
-
-Navbar dynamically updates based on user session
-
-📁 Folder Structure
-perl
-
-my-digital-library/
-│
-├── client/               # React frontend
-│   └── src/
-│       ├── components/   # Reusable UI components
-│       ├── contexts/     # Auth and Book context
-│       ├── pages/        # Page views (Home, Admin, Login, etc.)
-│       └── App.jsx
-│
-├── server/               # Express backend
-│   ├── controllers/      # Route handlers
-│   ├── routes/           # API routes
-│   ├── models/           # Mongoose models
-│   └── index.js          # Server entry point
-🛠 Setup Instructions
-1. Clone the Repo
-bash
-
-git clone https://github.com/yourusername/my-digital-library.git
-cd my-digital-library
-2. Backend Setup
-bash
-
-cd server
+```bash
+cd backend
 npm install
-npm run dev
-The backend server will start on http://localhost:2025
+```
 
-3. Frontend Setup
-bash
+Create a `.env` file in the `backend` directory:
 
-cd client
+```env
+MONGO_URI=your_mongodb_connection_string
+JWT_SECRET=your_jwt_secret_key
+PORT=3000
+NODE_ENV=development
+```
+
+### 3. Frontend Setup
+
+```bash
+cd ../frontend/client
 npm install
+```
+
+## ⚙️ Configuration
+
+### Backend Environment Variables
+
+Create `backend/.env` with the following variables:
+
+```env
+MONGO_URI=mongodb://localhost:27017/books-library
+# Or use MongoDB Atlas:
+# MONGO_URI=mongodb+srv://username:password@cluster.mongodb.net/books-library
+
+JWT_SECRET=your_super_secret_jwt_key_here
+PORT=3000
+NODE_ENV=development
+```
+
+### Frontend Configuration
+
+The frontend is configured to connect to `http://localhost:3000/api` by default. If your backend runs on a different port, update `frontend/client/src/api/axios.js`.
+
+## 🏃 Running the Application
+
+### Start MongoDB
+
+Make sure MongoDB is running on your system:
+
+```bash
+# If using local MongoDB
+mongod
+
+# Or if using MongoDB as a service
+sudo systemctl start mongod  # Linux
+brew services start mongodb-community  # macOS
+```
+
+### Start Backend Server
+
+```bash
+cd backend
 npm run dev
-The React app will start on http://localhost:5173
+```
 
-✅ To Do / Future Improvements
- PDF Upload via Admin Panel
+The backend server will run on `http://localhost:3000`
 
- Filter/Search books
+### Seed Database (Optional)
 
- Pagination support
+To populate the database with sample books:
 
- UI enhancements and animations
+```bash
+cd backend
+npm run seed
+```
 
- Mobile responsiveness polish
+### Start Frontend Development Server
 
- Admin user management
+```bash
+cd frontend/client
+npm run dev
+```
+
+The frontend will run on `http://localhost:5173` (or another available port)
+
+## 📁 Project Structure
+
+```
+Books-Library-Management/
+├── backend/
+│   ├── config/
+│   │   └── db.js              # Database connection
+│   ├── controllers/
+│   │   ├── authController.js   # Authentication logic
+│   │   ├── bookController.js   # Book CRUD operations
+│   │   └── myBookController.js # User's book list operations
+│   ├── middleware/
+│   │   ├── authMiddleware.js   # JWT authentication
+│   │   ├── errorHandler.js     # Error handling
+│   │   └── roleMiddleware.js   # Role-based access control
+│   ├── models/
+│   │   ├── Book.js            # Book schema
+│   │   ├── MyBook.js          # User's book list schema
+│   │   └── User.js            # User schema
+│   ├── routes/
+│   │   ├── authRoutes.js      # Authentication routes
+│   │   ├── booksRoutes.js      # Book routes
+│   │   └── mybooksRoutes.js   # User's book list routes
+│   ├── utils/
+│   │   └── generateToken.js   # JWT token generation
+│   ├── index.js               # Server entry point
+│   └── seed.js               # Database seeding script
+│
+└── frontend/
+    └── client/
+        ├── src/
+        │   ├── api/
+        │   │   └── axios.js          # Axios configuration
+        │   ├── components/
+        │   │   ├── AddBookForm.jsx   # Add book form
+        │   │   ├── BookCard.jsx      # Book card component
+        │   │   ├── EditBookForm.jsx  # Edit book form
+        │   │   └── Navbar.jsx        # Navigation bar
+        │   ├── contexts/
+        │   │   ├── AdminContext.jsx  # Admin state management
+        │   │   ├── AuthContext.jsx   # Authentication state
+        │   │   └── BookContext.jsx   # Book state management
+        │   ├── pages/
+        │   │   ├── AdminDashboard.jsx # Admin dashboard
+        │   │   ├── HomePage.jsx      # Home page
+        │   │   ├── LoginPage.jsx     # Login page
+        │   │   ├── MyBooksPage.jsx   # User's books page
+        │   │   ├── PDFReaderPage.jsx # PDF reader page
+        │   │   ├── ProfilePage.jsx   # User profile page
+        │   │   └── RegisterPage.jsx  # Registration page
+        │   ├── routes/
+        │   │   └── ProtectedRoute.jsx # Route protection
+        │   ├── App.jsx              # Main app component
+        │   └── main.jsx             # App entry point
+        └── package.json
+```
+
+## 🔌 API Endpoints
+
+### Authentication
+- `POST /api/auth/register` - Register a new user
+- `POST /api/auth/login` - Login user
+- `GET /api/auth/me` - Get current user (protected)
+
+### Books
+- `GET /api/books` - Get all books
+- `POST /api/books` - Create a new book (admin only)
+- `PUT /api/books/:id` - Update a book (admin only)
+- `DELETE /api/books/:id` - Delete a book (admin only)
+
+### My Books
+- `GET /api/mybooks` - Get user's book list (protected)
+- `POST /api/mybooks/:bookId` - Add book to user's list (protected)
+- `PATCH /api/mybooks/:bookId/status` - Update reading status (protected)
+- `PATCH /api/mybooks/:bookId/rating` - Update book rating (protected)
+
+## 👤 User Roles
+
+- **Student**: Can browse books, add to reading list, track progress, and read PDFs
+- **Admin**: All student privileges plus book management (add, edit, delete)
+
+## 🎯 Key Features Explained
+
+### Pagination
+- Homepage and Admin Dashboard display 10 books per page
+- Smooth navigation with Previous/Next buttons
+- Page numbers with smart ellipsis for large page counts
+
+### PDF Reading
+- Books can have PDF files attached
+- Only logged-in users can access PDF reading
+- PDFs open in a new tab for reading
+
+### Search & Filter
+- Real-time search by title or author
+- Filter by availability (All, Available, Unavailable)
+- Search results are paginated
+
+### Reading Status Tracking
+- **Want to Read**: Books you plan to read
+- **Currently Reading**: Books you're reading now
+- **Read**: Books you've finished
+
+## 🔒 Security Features
+
+- JWT-based authentication
+- Password hashing with bcryptjs
+- Protected routes for authenticated users
+- Role-based access control for admin functions
+- CORS configuration for secure API access
+
+## 🐛 Troubleshooting
+
+### Backend Issues
+
+**MongoDB Connection Error**
+- Ensure MongoDB is running
+- Check your `MONGO_URI` in `.env` file
+- Verify network connectivity if using MongoDB Atlas
+
+**Port Already in Use**
+- Change `PORT` in `.env` file
+- Or kill the process using port 3000
+
+### Frontend Issues
+
+**API Connection Error**
+- Ensure backend server is running
+- Check `baseURL` in `frontend/client/src/api/axios.js`
+- Verify CORS settings in backend
+
+**Build Errors**
+- Delete `node_modules` and reinstall: `rm -rf node_modules && npm install`
+- Clear Vite cache: `rm -rf node_modules/.vite`
+
+## 📝 Scripts
+
+### Backend
+- `npm start` - Start production server
+- `npm run dev` - Start development server with nodemon
+- `npm run seed` - Seed database with sample books
+
+### Frontend
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run preview` - Preview production build
+- `npm run lint` - Run ESLint
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is open source and available under the [MIT License](LICENSE).
+
+## 👨‍💻 Author
+
+Created with ❤️ for book lovers and library management.
+
+## 🙏 Acknowledgments
+
+- React team for the amazing framework
+- Express.js for the robust backend framework
+- MongoDB for the flexible database solution
+- Tailwind CSS for the beautiful styling utilities
+
+---
+
+**Happy Reading! 📚✨**
